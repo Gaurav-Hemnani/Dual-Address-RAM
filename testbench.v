@@ -28,35 +28,52 @@ module dual_address_ram_tb();
 		.data_out_1(data_out_1)
 	);
 	
-	always
-		#5 clk = ~clk;
+	always begin
+	  #5;
+	  clk = ~clk;
+	end
 
 	initial begin
 		// Initialize Inputs
 		clk = 1;
-		wr_en = 0;
 		data_in = 0;
 		addr_in_0 = 0;
 		addr_in_1 = 0;
-		port_en_0 = 0;
-		port_en_1 = 0;
+		wr_en = 1;
+		port_en_0 = 1;
+		port_en_1 = 1;
 		#20;
 
-		port_en_0=1;
-		wr_en=1;
-	for(i=1; i<=16; i=i+1) begin
-		data_in=i;
-		addr_in_0=i-1;
-		#10;
-	end
-		wr_en=0;
-		port_en_0=0;
-		port_en_1=1;
-	for(i=1; i<=16; i=i+1) begin
-		addr_in_1=i-1;
-		#10;
-	end
+		for (integer i = 1; i <= 16; i = i + 1) begin
+			data_in = i;
+			addr_in_0 = i - 1;
+			#10;
+		end
+
+		for (integer i = 1; i <= 16; i = i + 1) begin
+			data_in = 16 - i;
+			addr_in_1 = i - 1;
+			#10;
+		end
+			
 		// Add stimulus here
+		#30;
+		port_en_0 = 0;
+		port_en_1 = 0;
+
+		for (integer i = 0; i <= 16; i = i + 1) begin
+		  addr_in_0 = i;
+		  addr_in_1 = i;
+		  #20;
+		end
+
+		#30;
+		$finish;
+	end
+
+	initial begin
+	  $dumpfile("dump.vcd");
+	  $dumpvars(0);
 	end
 	
 endmodule
