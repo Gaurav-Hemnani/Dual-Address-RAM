@@ -16,6 +16,8 @@ module dual_address_ram(
 			ram[addr_in_0] <= data_in;
 		if (port_en_1 == 1 && wr_en == 1)
 			ram[addr_in_1] <= data_in;
+		if ((port_en_0 && port_en_1) && (addr_in_0 == addr_in_1))
+			ram[addr_in_0] <= xx;
 	end
 
 	assign data_out_0 = port_en_0 ? ram[addr_in_0] : 'dZ;
